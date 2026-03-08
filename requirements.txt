@@ -1,0 +1,3 @@
+# Tax Calculator - Python dependencies
+fastapi[standard]
+python-multipart
