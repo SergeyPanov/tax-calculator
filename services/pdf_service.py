@@ -7,7 +7,7 @@ from models.confirmation_of_a_taxable_income import ConfirmationOfATaxableIncome
 
 
 class PdfService:
-# Maps row number to the model field name
+    # Maps row number to the model field name
     ROW_FIELD_MAP: dict[int, str] = {
         1: "total_accounted_incomes",
         2: "incomes_paid_till_january_31",
