@@ -40,7 +40,7 @@ class PdfService:
         return None
 
 
-    def _parse_value(self, raw: str | None, field: str) -> Decimal | None:
+    def _parse_value(self, raw: str | None) -> Decimal | None:
         if not raw:
             return None
         cleaned = raw.strip().replace("\xa0", "").replace(" ", "")
@@ -67,7 +67,7 @@ class PdfService:
                     if c and c.strip():
                         value_cell = c
                         break
-                data[field] = self._parse_value(value_cell, field)
+                data[field] = self._parse_value(value_cell)
         return data
 
 
