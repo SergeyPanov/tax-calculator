@@ -1,3 +1,7 @@
 # Tax Calculator - Python dependencies
 fastapi[standard]
 python-multipart
+pytesseract
+pdf2image
+pdfplumber
+debugpy
