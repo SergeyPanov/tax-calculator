@@ -29,7 +29,7 @@ class PdfService:
             for page in pdf.pages:
                 tables = page.extract_tables()
                 if tables:
-                    extracted = self._extract_from_tables(tables)
+                    extracted.update(self._extract_from_tables(tables))
 
         return ConfirmationOfATaxableIncome(**extracted)
 
