@@ -10,6 +10,7 @@ A FastAPI application that accepts PDF documents (invoices, receipts, tax forms)
 - **Framework**: FastAPI with Uvicorn
 - **PDF Processing**: Scanned PDFs use OCR (`pytesseract` + `pdf2image`); text-based PDFs use direct text extraction
 - **Package management**: pip with `requirements.txt`
+- **Environment**: Nix (`shell.nix`) with direnv (`.envrc`) for system dependencies (`tesseract`, `poppler-utils`); Python venv (`.venv`) for pip packages
 
 ## Code Style
 
@@ -28,11 +29,17 @@ A FastAPI application that accepts PDF documents (invoices, receipts, tax forms)
 ## Build and Test
 
 ```bash
-# Install dependencies
+# Enter the Nix environment (installs system deps + activates .venv)
+nix-shell
+
+# Or use direnv (automatic via .envrc)
+direnv allow
+
+# Install Python dependencies
 pip install -r requirements.txt
 
 # Run the development server
-uvicorn main:app --reload
+fastapi dev
 
 # Run tests
 pytest
