@@ -9,8 +9,12 @@ from services.tax_calculation_service import TaxCalculationService
 def _make_confirmation(
     tax_base: Decimal | None = None,
     total_tax_advance: Decimal | None = None,
+    incomes_paid_till_january_31: Decimal | None = None,
+    additional_payments: Decimal | None = None,
 ) -> ConfirmationOfATaxableIncome:
     return ConfirmationOfATaxableIncome(
+        incomes_paid_till_january_31=incomes_paid_till_january_31,
+        additional_payments=additional_payments,
         tax_base=tax_base,
         total_tax_advance=total_tax_advance,
     )
@@ -29,10 +33,13 @@ class TestTaxCalculationService:
         result = self.service.calculate([c])
 
         assert result.aggregated_tax_base == Decimal("1000000")
+        assert result.rounded_tax_base == Decimal("1000000")
         assert result.tax_at_15_pct == Decimal("150000")
         assert result.tax_at_23_pct == Decimal("0")
-        assert result.total_tax == Decimal("150000")
-        assert result.overpayment_or_underpayment == Decimal("0")
+        assert result.income_tax == Decimal("150000")
+        assert result.total_tax_credits == Decimal("30840")
+        assert result.tax_after_credits == Decimal("119160")
+        assert result.overpayment_or_underpayment == Decimal("-30840")
 
     def test_above_threshold_progressive(self) -> None:
         """Income exceeds the 1,762,812 threshold — both brackets apply."""
@@ -46,9 +53,11 @@ class TestTaxCalculationService:
         assert result.tax_at_15_pct == Decimal("264421")
         # 23 % on 237,188 = 54,553.24 → floor → 54,553
         assert result.tax_at_23_pct == Decimal("54553")
-        assert result.total_tax == Decimal("318974")
-        # underpayment: 318,974 − 300,000 = 18,974
-        assert result.overpayment_or_underpayment == Decimal("18974")
+        assert result.income_tax == Decimal("318974")
+        assert result.total_tax_credits == Decimal("30840")
+        assert result.tax_after_credits == Decimal("288134")
+        # overpayment: 288,134 − 300,000 = -11,866
+        assert result.overpayment_or_underpayment == Decimal("-11866")
 
     def test_multiple_confirmations_aggregated(self) -> None:
         """Aggregates tax base and advances across two employers."""
@@ -68,8 +77,9 @@ class TestTaxCalculationService:
 
         # 15 % bracket fully used, plus 23 % on 37,188
         assert result.tax_at_15_pct == Decimal("264421")
-        excess_tax = (Decimal("37188") * Decimal("0.23")).to_integral_value()
         assert result.tax_at_23_pct == Decimal("8553")
+        assert result.income_tax == Decimal("272974")
+        assert result.tax_after_credits == Decimal("242134")
 
     def test_none_fields_default_to_zero(self) -> None:
         """All None fields should be treated as zero, producing zero tax."""
@@ -78,7 +88,8 @@ class TestTaxCalculationService:
 
         assert result.aggregated_tax_base == Decimal("0")
         assert result.aggregated_advances_withheld == Decimal("0")
-        assert result.total_tax == Decimal("0")
+        assert result.income_tax == Decimal("0")
+        assert result.tax_after_credits == Decimal("0")
         assert result.overpayment_or_underpayment == Decimal("0")
 
     def test_empty_list_raises_error(self) -> None:
@@ -95,6 +106,7 @@ class TestTaxCalculationService:
         result = self.service.calculate([c])
 
         # 15 % of 500,000 = 75,000
-        assert result.total_tax == Decimal("75000")
-        # 75,000 − 100,000 = −25,000  (overpayment / refund)
-        assert result.overpayment_or_underpayment == Decimal("-25000")
+        assert result.income_tax == Decimal("75000")
+        assert result.tax_after_credits == Decimal("44160")
+        # 44,160 − 100,000 = −55,840  (overpayment / refund)
+        assert result.overpayment_or_underpayment == Decimal("-55840")
