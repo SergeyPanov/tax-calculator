@@ -84,40 +84,68 @@ curl -F "file=@MSFT-POZP-2025.pdf" http://localhost:8000/calculate-tax
       "monthly_tax_bonuses": "0"
     }
   ],
+  "total_employment_income": "1704925",
+  "partial_tax_base": "1704925",
+  "rounded_tax_base": "1704900",
+  "income_tax": "255735",
+  "total_tax_credits": "30840",
+  "tax_after_credits": "224895",
+  "advances_withheld": "282298",
+  "overpayment_or_underpayment": "-57403",
   "aggregated_tax_base": "1704925",
   "aggregated_advances_withheld": "282298",
-  "tax_at_15_pct": "255738",
+  "tax_at_15_pct": "255735",
   "tax_at_23_pct": "0",
-  "total_tax": "255738",
-  "overpayment_or_underpayment": "-26560"
+  "total_tax": "255735"
 }
 ```
 
 ### Response Fields
 
-| Field | Type | Description |
-|---|---|---|
-| `confirmations` | `list` | Parsed data from the uploaded confirmation(s) |
-| `aggregated_tax_base` | `Decimal` | Sum of `tax_base` across all confirmations |
-| `aggregated_advances_withheld` | `Decimal` | Sum of `total_tax_advance` across all confirmations |
-| `tax_at_15_pct` | `Decimal` | Tax at 15 % on the first CZK 1 762 812 |
-| `tax_at_23_pct` | `Decimal` | Tax at 23 % on income above CZK 1 762 812 |
-| `total_tax` | `Decimal` | Total annual income tax (rounded down to whole CZK) |
-| `overpayment_or_underpayment` | `Decimal` | `total_tax − aggregated_advances_withheld`; negative = refund (přeplatek) |
+| Field | Type | DAP Row | Description |
+|---|---|---|---|
+| `confirmations` | `list` | — | Parsed data from the uploaded confirmation(s) |
+| `total_employment_income` | `Decimal` | ř. 31 | Sum of incomes + additional payments across all confirmations |
+| `partial_tax_base` | `Decimal` | ř. 36 | Sum of `tax_base` (partial tax base from dependent activity § 6) |
+| `rounded_tax_base` | `Decimal` | ř. 56 | `partial_tax_base` rounded down to nearest 100 CZK |
+| `income_tax` | `Decimal` | ř. 57 | Progressive tax computed from `rounded_tax_base` (15 %/23 %) |
+| `total_tax_credits` | `Decimal` | ř. 70 | Sum of applied tax credits (slevy) — currently only sleva na poplatníka: 30 840 CZK |
+| `tax_after_credits` | `Decimal` | ř. 71 | Income tax after credits: `MAX(0, income_tax − total_tax_credits)` |
+| `advances_withheld` | `Decimal` | ř. 84 | Sum of `total_tax_advance` across all confirmations (sražené zálohy) |
+| `overpayment_or_underpayment` | `Decimal` | — | `tax_after_credits − advances_withheld`; negative = refund (přeplatek) |
+| `aggregated_tax_base` | `Decimal` | — | *(legacy)* Alias for `partial_tax_base` |
+| `aggregated_advances_withheld` | `Decimal` | — | *(legacy)* Alias for `advances_withheld` |
+| `tax_at_15_pct` | `Decimal` | — | Tax at 15 % on the first CZK 1 762 812 of `rounded_tax_base` |
+| `tax_at_23_pct` | `Decimal` | — | Tax at 23 % on `rounded_tax_base` exceeding CZK 1 762 812 |
+| `total_tax` | `Decimal` | — | `tax_at_15_pct + tax_at_23_pct` (before applying credits) |
 
-### Tax Formula
+### Tax Formula (DAP-Compliant)
 
 ```
-If tax_base ≤ 1 762 812:
-    tax = ⌊tax_base × 0.15⌋
+1. rounded_tax_base = ⌊partial_tax_base / 100⌋ × 100  (round down to nearest 100 CZK)
 
-If tax_base > 1 762 812:
-    tax = ⌊1 762 812 × 0.15⌋ + ⌊(tax_base − 1 762 812) × 0.23⌋
+2. If rounded_tax_base ≤ 1 762 812:
+       income_tax = ⌊rounded_tax_base × 0.15⌋
+   
+   If rounded_tax_base > 1 762 812:
+       income_tax = ⌊1 762 812 × 0.15⌋ + ⌊(rounded_tax_base − 1 762 812) × 0.23⌋
 
-overpayment_or_underpayment = tax − advances_withheld
+3. total_tax_credits = 30 840  (sleva na poplatníka — always applied)
+
+4. tax_after_credits = MAX(0, income_tax − total_tax_credits)
+
+5. overpayment_or_underpayment = tax_after_credits − advances_withheld
 ```
 
-All amounts are rounded down (`ROUND_FLOOR`) to whole CZK per Czech tax law.
+**Example** (CZK 1 704 925 tax base, CZK 282 298 withheld):
+```
+rounded_tax_base    = ⌊1 704 925 / 100⌋ × 100 = 1 704 900
+income_tax          = ⌊1 704 900 × 0.15⌋      = 255 735
+tax_after_credits   = MAX(0, 255 735 − 30 840) = 224 895
+overpayment         = 224 895 − 282 298        = −57 403  (refund)
+```
+
+All amounts are rounded down (`ROUND_FLOOR`) to whole CZK per Czech tax law (§ 16 zákona č. 586/1992 Sb.).
 
 ### Errors
 

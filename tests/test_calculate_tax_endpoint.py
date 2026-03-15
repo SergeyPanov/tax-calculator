@@ -15,8 +15,12 @@ def client() -> TestClient:
 
 
 def _mock_confirmation(**kwargs: Decimal | None) -> ConfirmationOfATaxableIncome:
+    tax_base = kwargs.get("tax_base", Decimal("1000000"))
+    additional_payments = kwargs.get("additional_payments", Decimal("0"))
     return ConfirmationOfATaxableIncome(
-        tax_base=kwargs.get("tax_base", Decimal("1000000")),
+        incomes_paid_till_january_31=kwargs.get("incomes", tax_base),
+        additional_payments=additional_payments,
+        tax_base=tax_base,
         total_tax_advance=kwargs.get("advance", Decimal("150000")),
     )
 
@@ -38,8 +42,10 @@ class TestCalculateTaxEndpoint:
         assert resp.status_code == 200
         body = resp.json()
         assert len(body["confirmations"]) == 1
-        assert Decimal(body["aggregated_tax_base"]) == Decimal("900000")
-        assert "total_tax" in body
+        assert Decimal(body["partial_tax_base"]) == Decimal("900000")
+        assert Decimal(body["income_tax"]) == Decimal("135000")
+        assert Decimal(body["tax_after_credits"]) == Decimal("104160")
+        assert Decimal(body["advances_withheld"]) == Decimal("135000")
         assert "overpayment_or_underpayment" in body
 
     def test_non_pdf_file_rejected(self, client: TestClient) -> None:
