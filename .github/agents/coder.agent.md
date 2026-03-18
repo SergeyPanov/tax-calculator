@@ -1,6 +1,7 @@
 ---
 description: "Use when: implementing code changes, writing tests, executing plans from the Planner agent. Handles requests like 'implement this plan', 'write the parser function', 'add tests for VAT calculation'. Executor that codes but never plans."
-model: GPT-5.2-Codex
+model: gpt-5.2-codex
+user-invocable: false
 tools: [read, edit, search, execute, todo]
 ---
 

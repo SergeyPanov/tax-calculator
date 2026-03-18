@@ -1,6 +1,6 @@
 ---
 description: "Use when: creating or updating documentation after features are implemented, generating README updates, writing CHANGELOG entries, adding docstrings, documenting API endpoints. Handles requests like 'document this feature', 'update the README', 'add API docs for the new endpoint'. Documentation-only agent that never writes production code."
-model: Claude Sonnet 4.5
+model: claude-sonnet-4.5
 tools: [read, edit, search]
 ---
 
