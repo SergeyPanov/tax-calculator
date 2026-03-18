@@ -1,6 +1,7 @@
 ---
 description: "Use when: verifying code changes, running tests, checking test coverage, validating tax calculations. Handles requests like 'verify this implementation', 'run tests for the parser', 'check edge cases for VAT'. Quality gate that tests but never writes production code."
-model: Claude Opus 4.6
+model: claude-opus-4.6
+user-invocable: false
 tools: [read, search, execute]
 ---
 

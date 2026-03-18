@@ -17,8 +17,7 @@ A FastAPI application that parses Czech tax forms (Potvrzení o zdanitelných p�
 
 | Method | Path | Description |
 |--------|------|-------------|
-| `POST` | `/upload-pdf` | Upload a PDF and extract fields from the confirmation form |
-| `POST` | `/calculate-tax` | Upload a PDF, extract fields, and calculate annual income tax |
+| `POST` | `/calculate-tax` | Upload a ZIP archive containing POZP PDFs, extract fields, and calculate annual income tax |
 
 See [docs/api.md](docs/api.md) for detailed request/response schemas and `curl` examples.
 
@@ -34,8 +33,11 @@ pip install -r requirements.txt
 # 3. Run the dev server
 fastapi dev
 
-# 4. Upload a confirmation PDF and calculate tax
-curl -F "file=@MSFT-POZP-2025.pdf" http://localhost:8000/calculate-tax
+# 4. Create a ZIP with one or more POZP PDFs
+zip pozp-documents.zip MSFT-POZP-2025-1.pdf MSFT-POZP-2025-2.pdf
+
+# 5. Upload the ZIP and calculate tax
+curl -F "file=@pozp-documents.zip" http://localhost:8000/calculate-tax
 ```
 
 Example response:
@@ -110,7 +112,7 @@ mypy --explicit-package-bases models/ services/ routers/ --ignore-missing-import
 
 ```
 main.py                                — FastAPI app entry point
-routers/pdf.py                         — /upload-pdf and /calculate-tax endpoints
+routers/pdf.py                         — /calculate-tax endpoint (ZIP archive upload)
 models/
   confirmation_of_a_taxable_income.py  — Pydantic model for MFin 5460 form fields
   tax_result.py                        — Pydantic model for tax calculation result

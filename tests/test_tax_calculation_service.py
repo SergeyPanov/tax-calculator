@@ -13,10 +13,15 @@ def _make_confirmation(
     additional_payments: Decimal | None = None,
 ) -> ConfirmationOfATaxableIncome:
     return ConfirmationOfATaxableIncome(
+        total_accounted_incomes=None,
         incomes_paid_till_january_31=incomes_paid_till_january_31,
+        accounted_in_months=None,
         additional_payments=additional_payments,
         tax_base=tax_base,
+        tax_advance_from_row_2=None,
+        tax_advance_from_row_4=None,
         total_tax_advance=total_tax_advance,
+        monthly_tax_bonuses=None,
     )
 
 

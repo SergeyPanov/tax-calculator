@@ -31,7 +31,25 @@ class PdfService:
                 if tables:
                     extracted.update(self._extract_from_tables(tables))
 
-        return ConfirmationOfATaxableIncome(**extracted)
+        def _d(key: str) -> Decimal | None:
+            val = extracted.get(key)
+            return val if isinstance(val, Decimal) else None
+
+        def _s(key: str) -> str | None:
+            val = extracted.get(key)
+            return val if isinstance(val, str) else None
+
+        return ConfirmationOfATaxableIncome(
+            total_accounted_incomes=_d("total_accounted_incomes"),
+            incomes_paid_till_january_31=_d("incomes_paid_till_january_31"),
+            accounted_in_months=_s("accounted_in_months"),
+            additional_payments=_d("additional_payments"),
+            tax_base=_d("tax_base"),
+            tax_advance_from_row_2=_d("tax_advance_from_row_2"),
+            tax_advance_from_row_4=_d("tax_advance_from_row_4"),
+            total_tax_advance=_d("total_tax_advance"),
+            monthly_tax_bonuses=_d("monthly_tax_bonuses"),
+        )
 
     def _parse_row_number(self, cell: str) -> int | None:
         stripped = cell.strip().rstrip(".")
