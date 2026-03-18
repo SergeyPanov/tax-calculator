@@ -14,3 +14,8 @@ build/
 *.swo
 *~
 *.pdf
+*.zip
+node_modules/
+package-lock.json
+package.json
+.coverage
