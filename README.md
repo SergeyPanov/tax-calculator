@@ -108,6 +108,8 @@ pytest
 mypy --explicit-package-bases models/ services/ routers/ --ignore-missing-imports
 ```
 
+In VS Code, you can also use `Terminal` -> `Run Task...` -> `Run FastAPI app` to start the server on port `8000` without creating a custom local task.
+
 ## Project Structure
 
 ```
