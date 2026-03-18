@@ -1,0 +1,41 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  tests:
+    # Mirrors the Nix dev environment declared in shell.nix:
+    #   pkgs.python3       -> actions/setup-python@v5 (python-version: "3.12")
+    #   pkgs.poppler-utils -> apt: poppler-utils
+    #   pkgs.tesseract     -> apt: tesseract-ocr, tesseract-ocr-ces (Czech language data)
+    #   pkgs.git           -> apt: git
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install system dependencies (mirrors shell.nix)
+        run: |
+          sudo apt-get update -q
+          sudo apt-get install -y \
+            git \
+            poppler-utils \
+            tesseract-ocr \
+            tesseract-ocr-ces
+
+      - name: Create virtual environment
+        run: python -m venv .venv
+
+      - name: Install Python dependencies
+        run: .venv/bin/pip install -r requirements.txt
+
+      - name: Run tests
+        run: .venv/bin/pytest tests/ -v
