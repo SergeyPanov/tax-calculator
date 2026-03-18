@@ -1,5 +1,7 @@
 ---
 description: "Use when: verifying code changes, running tests, checking test coverage, validating tax calculations. Handles requests like 'verify this implementation', 'run tests for the parser', 'check edge cases for VAT'. Quality gate that tests but never writes production code."
+model: claude-opus-4.6
+user-invocable: false
 tools: [read, search, execute]
 ---
 
@@ -90,7 +92,8 @@ Always respond with this exact JSON structure:
 
 ## Approach
 
-1. Read the changed files and the original plan/criteria
+1. Read `.github/instructions/` — before validating any change, read every file in that folder to verify implementations are consistent with the authoritative tax rules and field mappings
+2. Read the changed files and the original plan/criteria
 2. Run `pytest -v` on relevant test files
 3. Run `mypy` on changed source files
 4. Check edge cases specific to Czech tax forms
