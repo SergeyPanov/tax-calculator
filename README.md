@@ -28,7 +28,7 @@ See [docs/api.md](docs/api.md) for detailed request/response schemas and `curl` 
 nix-shell
 
 # 2. Install Python dependencies
-pip install -r requirements.txt
+uv pip install -r requirements.txt
 
 # 3. Run the dev server
 fastapi dev
@@ -93,7 +93,7 @@ direnv allow
 nix-shell
 ```
 
-Both options provide system dependencies (`poppler-utils`, `git`), create a `.venv/`, and install pip packages.
+Both options provide system dependencies (`poppler-utils`, `git`), create a `.venv/`, and install packages via uv.
 
 ## Development
 
