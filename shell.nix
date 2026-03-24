@@ -3,6 +3,7 @@
 pkgs.mkShell {
   buildInputs = [
     pkgs.python3
+    pkgs.uv
     pkgs.poppler-utils
     pkgs.tesseract
     pkgs.git
@@ -10,9 +11,9 @@ pkgs.mkShell {
 
   shellHook = ''
     if [ ! -d .venv ]; then
-      python3 -m venv .venv
+      uv venv .venv
     fi
     source .venv/bin/activate
-    pip install -q -r requirements.txt
+    uv pip install -q -r requirements.txt
   '';
 }
