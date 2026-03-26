@@ -40,4 +40,4 @@ jobs:
       - name: Run tests
         env:
           PYTHONPATH: ${{ github.workspace }}
-        run: .venv/bin/pytest tests/ -v
+        run: .venv/bin/pytest backend/tests/ -v

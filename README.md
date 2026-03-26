@@ -121,7 +121,7 @@ models/
 services/
   pdf_service.py                       — PDF table extraction (pdfplumber)
   tax_calculation_service.py           — Progressive tax computation (15%/23%)
-tests/
+backend/tests/
   test_tax_calculation_service.py      — Unit tests for tax calculation
   test_calculate_tax_endpoint.py       — Integration tests for API endpoints
 ```
