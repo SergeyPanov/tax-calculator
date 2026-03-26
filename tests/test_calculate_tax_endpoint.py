@@ -6,8 +6,8 @@ from unittest.mock import patch
 import pytest
 from fastapi.testclient import TestClient
 
-from main import app
-from models.confirmation_of_a_taxable_income import ConfirmationOfATaxableIncome
+from backend.main import app
+from backend.models.confirmation_of_a_taxable_income import ConfirmationOfATaxableIncome
 
 
 @pytest.fixture
@@ -49,7 +49,7 @@ class TestCalculateTaxEndpoint:
         zip_bytes = _make_zip({"employer.pdf": b"%PDF-fake"})
 
         with patch(
-            "routers.pdf.PdfService.extract_confirmation_of_tax_income",
+            "backend.routers.pdf.PdfService.extract_confirmation_of_tax_income",
             return_value=confirmation,
         ):
             resp = client.post(
@@ -88,7 +88,7 @@ class TestCalculateTaxEndpoint:
         )
 
         with patch(
-            "routers.pdf.PdfService.extract_confirmation_of_tax_income",
+            "backend.routers.pdf.PdfService.extract_confirmation_of_tax_income",
             side_effect=confirmations,
         ):
             resp = client.post(

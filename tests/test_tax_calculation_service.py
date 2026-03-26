@@ -2,8 +2,8 @@ from decimal import Decimal
 
 import pytest
 
-from models.confirmation_of_a_taxable_income import ConfirmationOfATaxableIncome
-from services.tax_calculation_service import TaxCalculationService
+from backend.models.confirmation_of_a_taxable_income import ConfirmationOfATaxableIncome
+from backend.services.tax_calculation_service import TaxCalculationService
 
 
 def _make_confirmation(

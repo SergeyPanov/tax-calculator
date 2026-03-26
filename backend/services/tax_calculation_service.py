@@ -1,7 +1,7 @@
 from decimal import Decimal, ROUND_FLOOR
 
-from models.confirmation_of_a_taxable_income import ConfirmationOfATaxableIncome
-from models.tax_result import TaxResult
+from backend.models.confirmation_of_a_taxable_income import ConfirmationOfATaxableIncome
+from backend.models.tax_result import TaxResult
 
 # 2026 annual threshold: 36× average monthly wage (48,967 CZK × 36 = 1,762,812)
 _BRACKET_THRESHOLD = Decimal("1762812")
@@ -18,9 +18,7 @@ def _d(value: Decimal | None) -> Decimal:
 
 class TaxCalculationService:
 
-    def calculate(
-        self, confirmations: list[ConfirmationOfATaxableIncome]
-    ) -> TaxResult:
+    def calculate(self, confirmations: list[ConfirmationOfATaxableIncome]) -> TaxResult:
         """Calculate annual income tax from one or more Potvrzení o zdanitelných příjmech.
 
         Implements Czech personal income tax (DPFO) calculation following DAP
@@ -59,28 +57,21 @@ class TaxCalculationService:
         if not confirmations:
             raise ValueError("At least one confirmation is required")
 
-        aggregated_tax_base = sum(
-            (_d(c.tax_base) for c in confirmations), Decimal(0)
-        )
+        aggregated_tax_base = sum((_d(c.tax_base) for c in confirmations), Decimal(0))
         aggregated_employment_income = sum(
             (
-                _d(c.incomes_paid_till_january_31)
-                + _d(c.additional_payments)
+                _d(c.incomes_paid_till_january_31) + _d(c.additional_payments)
                 for c in confirmations
             ),
             Decimal(0),
         )
         aggregated_advances = sum(
-            (_d(c.total_tax_advance)
-             for c in confirmations),
+            (_d(c.total_tax_advance) for c in confirmations),
             Decimal(0),
         )
-        rounded_tax_base = (
-            (aggregated_tax_base / _ROUNDING_UNIT).to_integral_value(
-                rounding=ROUND_FLOOR
-            )
-            * _ROUNDING_UNIT
-        )
+        rounded_tax_base = (aggregated_tax_base / _ROUNDING_UNIT).to_integral_value(
+            rounding=ROUND_FLOOR
+        ) * _ROUNDING_UNIT
 
         # Progressive tax: 15 % up to threshold, 23 % on the excess
         if rounded_tax_base <= _BRACKET_THRESHOLD:
@@ -93,9 +84,7 @@ class TaxCalculationService:
                 rounding=ROUND_FLOOR
             )
             excess = rounded_tax_base - _BRACKET_THRESHOLD
-            tax_at_23 = (excess * _RATE_HIGH).to_integral_value(
-                rounding=ROUND_FLOOR
-            )
+            tax_at_23 = (excess * _RATE_HIGH).to_integral_value(rounding=ROUND_FLOOR)
 
         total_tax = tax_at_15 + tax_at_23
         total_tax_credits = _SLEVA_NA_POPLATNIKA
