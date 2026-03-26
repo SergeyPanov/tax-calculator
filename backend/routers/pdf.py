@@ -3,10 +3,10 @@ from io import BytesIO
 
 from fastapi import APIRouter, Depends, File, HTTPException, UploadFile
 
-from models.confirmation_of_a_taxable_income import ConfirmationOfATaxableIncome
-from models.tax_result import TaxResult
-from services.pdf_service import PdfService
-from services.tax_calculation_service import TaxCalculationService
+from backend.models.confirmation_of_a_taxable_income import ConfirmationOfATaxableIncome
+from backend.models.tax_result import TaxResult
+from backend.services.pdf_service import PdfService
+from backend.services.tax_calculation_service import TaxCalculationService
 
 router = APIRouter()
 

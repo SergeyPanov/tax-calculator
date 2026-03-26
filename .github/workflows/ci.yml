@@ -38,4 +38,6 @@ jobs:
         run: .venv/bin/pip install -r requirements.txt
 
       - name: Run tests
+        env:
+          PYTHONPATH: ${{ github.workspace }}
         run: .venv/bin/pytest tests/ -v

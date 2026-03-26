@@ -5,7 +5,8 @@ from pydantic import BaseModel, Field
 
 class ConfirmationOfATaxableIncome(BaseModel):
     """Certificate of the taxable incomes from dependent activity and office holder's
-    emoluments, the withheld tax advances and tax advantage (MFin 5460 — 2025 layout)."""
+    emoluments, the withheld tax advances and tax advantage (MFin 5460 — 2025 layout).
+    """
 
     # 1. Úhrn zúčtovaných příjmů ze závislé činnosti
     total_accounted_incomes: Decimal | None = Field(
@@ -19,12 +20,14 @@ class ConfirmationOfATaxableIncome(BaseModel):
 
     # 3. Zúčtováno v měsících (číselné označení)
     accounted_in_months: str | None = Field(
-        None, description="Row 3 - Accounted in the months (numerical indication, e.g. '01 02 03')"
+        None,
+        description="Row 3 - Accounted in the months (numerical indication, e.g. '01 02 03')",
     )
 
     # 4. Doplatky příjmů podle § 5 odst. 4 zákona
     additional_payments: Decimal | None = Field(
-        None, description="Row 4 - Additional payments of the incomes (§ 5 subsection 4)"
+        None,
+        description="Row 4 - Additional payments of the incomes (§ 5 subsection 4)",
     )
 
     # 5. Základ daně (ř. 2 + ř. 4)
