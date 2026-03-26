@@ -2,7 +2,7 @@ from decimal import Decimal
 
 from pydantic import BaseModel, Field
 
-from models.confirmation_of_a_taxable_income import ConfirmationOfATaxableIncome
+from backend.models.confirmation_of_a_taxable_income import ConfirmationOfATaxableIncome
 
 
 class TaxResult(BaseModel):

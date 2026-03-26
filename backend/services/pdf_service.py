@@ -3,7 +3,7 @@ import io
 
 import pdfplumber
 
-from models.confirmation_of_a_taxable_income import ConfirmationOfATaxableIncome
+from backend.models.confirmation_of_a_taxable_income import ConfirmationOfATaxableIncome
 
 
 class PdfService:
@@ -22,7 +22,9 @@ class PdfService:
     # Czech label fragment used to identify the row-1 header (which has no "1." prefix)
     _ROW_1_LABEL = "úhrn zúčtovaných příjmů"
 
-    def extract_confirmation_of_tax_income(self, content: bytes) -> ConfirmationOfATaxableIncome:
+    def extract_confirmation_of_tax_income(
+        self, content: bytes
+    ) -> ConfirmationOfATaxableIncome:
         extracted: dict[str, Decimal | str | None] = {}
 
         with pdfplumber.open(io.BytesIO(content)) as pdf:
@@ -57,17 +59,17 @@ class PdfService:
             return int(stripped)
         return None
 
-
     def _parse_value(self, raw: str | None) -> Decimal | None:
         if not raw:
             return None
-        cleaned = raw.strip().replace("\xa0", "").replace(" ", "")
-        if cleaned.isdigit():
-            return Decimal(cleaned)
-        else:
+        digits = "".join(ch for ch in raw.strip() if ch.isdigit())
+        if not digits:
             return None
+        return Decimal(digits)
 
-    def _extract_from_tables(self, tables: list[list[list[str | None]]]) -> dict[str, Decimal | str | None]:
+    def _extract_from_tables(
+        self, tables: list[list[list[str | None]]]
+    ) -> dict[str, Decimal | str | None]:
         data: dict[str, Decimal | str | None] = {}
         for table in tables:
             for row in table:
@@ -107,5 +109,3 @@ class PdfService:
             if c and c.strip() and not c.strip().startswith("XXX"):
                 return c
         return None
-
-

@@ -7,3 +7,5 @@ pdfplumber
 debugpy
 pytest
 httpx
+ruff
+black
