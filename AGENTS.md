@@ -45,6 +45,12 @@ fastapi dev
 pytest
 ```
 
+## Custom Agents
+
+- **frontend-planner** — Plans Next.js frontend features; hands off to frontend-coder and frontend-tester
+- **frontend-coder** — Implements Next.js frontend changes; outputs structured JSON status
+- **frontend-tester** — Validates Next.js frontend changes; outputs structured JSON results
+
 ## Conventions
 
 - Validate uploaded files: only accept `application/pdf` content type
