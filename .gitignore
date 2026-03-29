@@ -18,3 +18,5 @@ build/
 node_modules/
 package.json
 .coverage
+.DS_Store
+.next
