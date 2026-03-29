@@ -9,7 +9,7 @@ export default function RootLayout({
   children: ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="cs">
       <body
         style={{
           fontFamily:

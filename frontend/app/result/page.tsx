@@ -27,49 +27,49 @@ type FieldConfig = {
 
 const fields: FieldConfig[] = [
   {
-    label: "Total employment income (DAP 31)",
+    label: "Úhrn příjmů od zaměstnavatele (DAP 31)",
     key: "total_employment_income",
   },
   {
-    label: "Partial tax base (DAP 36)",
+    label: "Dílčí základ daně (DAP 36)",
     key: "partial_tax_base",
   },
   {
-    label: "Rounded tax base (DAP 56)",
+    label: "Zaokrouhlený základ daně (DAP 56)",
     key: "rounded_tax_base",
   },
   {
-    label: "Income tax (DAP 57)",
+    label: "Daň z příjmů (DAP 57)",
     key: "income_tax",
   },
   {
-    label: "Tax credits total (DAP 70)",
+    label: "Slevy na dani celkem (DAP 70)",
     key: "total_tax_credits",
   },
   {
-    label: "Tax after credits (DAP 71)",
+    label: "Daň po slevách (DAP 71)",
     key: "tax_after_credits",
   },
   {
-    label: "Advances withheld (DAP 84)",
+    label: "Sražené zálohy (DAP 84)",
     key: "advances_withheld",
   },
   {
-    label: "Overpayment / underpayment",
+    label: "Přeplatek / nedoplatek",
     key: "overpayment_or_underpayment",
-    helper: "Negative means refund due.",
+    helper: "Záporná hodnota znamená přeplatek.",
   },
 ];
 
 const detailFields: FieldConfig[] = [
-  { label: "Aggregated tax base", key: "aggregated_tax_base" },
+  { label: "Souhrnný základ daně", key: "aggregated_tax_base" },
   {
-    label: "Aggregated advances withheld",
+    label: "Souhrn sražených záloh",
     key: "aggregated_advances_withheld",
   },
-  { label: "Tax at 15%", key: "tax_at_15_pct" },
-  { label: "Tax at 23%", key: "tax_at_23_pct" },
-  { label: "Total tax", key: "total_tax" },
+  { label: "Daň 15 %", key: "tax_at_15_pct" },
+  { label: "Daň 23 %", key: "tax_at_23_pct" },
+  { label: "Daň celkem", key: "total_tax" },
 ];
 
 const formatCurrency = (value: number | string | undefined): string => {
@@ -135,31 +135,33 @@ export default function ResultPage() {
       <div className="container" style={{ maxWidth: "720px" }}>
         <div className="d-flex align-items-center justify-content-between mb-3">
           <div>
-            <h1 className="h4 mb-1">Tax calculation result</h1>
+            <h1 className="h4 mb-1">Výsledek výpočtu daně</h1>
             <div className="text-muted small">
-              Review the key DAP lines before filing.
+              Zkontrolujte klíčové řádky DAP před podáním.
             </div>
           </div>
           <Link className="btn btn-outline-secondary btn-sm" href="/">
-            Upload another ZIP
+            Nahrát další ZIP
           </Link>
         </div>
 
         {!result ? (
           <div className="alert alert-warning" role="alert">
-            <div className="fw-semibold mb-1">No result found</div>
+            <div className="fw-semibold mb-1">Výsledek nebyl nalezen</div>
             <div className="small text-muted">
-              Upload documents again to calculate your tax result.
+              Nahrajte dokumenty znovu pro výpočet daně.
             </div>
             <Link className="btn btn-primary btn-sm mt-3" href="/">
-              Go back to upload
+              Zpět na nahrání
             </Link>
           </div>
         ) : (
           <div className="card shadow-sm border-0">
             <div className="card-body p-4">
               <div className="mb-4">
-                <h2 className="h6 text-uppercase text-muted mb-2">Key lines</h2>
+                <h2 className="h6 text-uppercase text-muted mb-2">
+                  Klíčové řádky
+                </h2>
                 <div className="table-responsive">
                   <table className="table table-sm align-middle mb-0">
                     <tbody>
@@ -180,7 +182,9 @@ export default function ResultPage() {
               </div>
 
               <div>
-                <h2 className="h6 text-uppercase text-muted mb-2">Details</h2>
+                <h2 className="h6 text-uppercase text-muted mb-2">
+                  Podrobnosti
+                </h2>
                 <div className="table-responsive">
                   <table className="table table-sm align-middle mb-0">
                     <tbody>

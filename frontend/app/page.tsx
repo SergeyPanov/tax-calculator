@@ -18,7 +18,7 @@ export default function Page() {
   const [isDragging, setIsDragging] = useState(false);
   const [status, setStatus] = useState<Status>({
     type: "idle",
-    message: "Select a ZIP archive with your tax documents.",
+    message: "Vyberte ZIP archiv s vašimi daňovými dokumenty.",
   });
 
   const statusClass = useMemo(() => {
@@ -37,11 +37,14 @@ export default function Page() {
   const handleFileChange = (file: File | null) => {
     setSelectedFile(file);
     if (file) {
-      setStatus({ type: "idle", message: `Ready to upload: ${file.name}` });
+      setStatus({
+        type: "idle",
+        message: `Připraveno k nahrání: ${file.name}`,
+      });
     } else {
       setStatus({
         type: "idle",
-        message: "Select a ZIP archive with your tax documents.",
+        message: "Vyberte ZIP archiv s vašimi daňovými dokumenty.",
       });
     }
   };
@@ -56,14 +59,20 @@ export default function Page() {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!selectedFile) {
-      setStatus({ type: "error", message: "Please choose a ZIP file first." });
+      setStatus({
+        type: "error",
+        message: "Nejprve vyberte ZIP soubor.",
+      });
       return;
     }
 
     const formData = new FormData();
     formData.append("file", selectedFile);
 
-    setStatus({ type: "loading", message: "Uploading and calculating tax..." });
+    setStatus({
+      type: "loading",
+      message: "Nahrávám a počítám daň...",
+    });
 
     try {
       const response = await fetch(calculateTaxUrl, {
@@ -72,7 +81,7 @@ export default function Page() {
       });
 
       if (!response.ok) {
-        let errorMessage = "Upload failed. Please try again.";
+        let errorMessage = "Nahrání se nepodařilo. Zkuste to prosím znovu.";
         try {
           const payload = (await response.json()) as { detail?: string };
           if (payload?.detail) {
@@ -90,11 +99,11 @@ export default function Page() {
       } catch {
         // Ignore sessionStorage failures (private mode, quota, etc.).
       }
-      setStatus({ type: "success", message: "Tax calculation completed." });
+      setStatus({ type: "success", message: "Výpočet daně dokončen." });
       router.push("/result");
     } catch (error) {
       const message =
-        error instanceof Error ? error.message : "Unexpected error occurred.";
+        error instanceof Error ? error.message : "Nastala neočekávaná chyba.";
       setStatus({ type: "error", message });
     }
   };
@@ -107,20 +116,20 @@ export default function Page() {
         <div className="card shadow-lg border-0">
           <div className="card-header bg-white border-0 py-3 px-4 d-flex align-items-center justify-content-between">
             <div>
-              <h1 className="h5 mb-1">Upload tax documents</h1>
+              <h1 className="h5 mb-1">Nahrajte daňové dokumenty</h1>
               <div className="text-muted small">
-                Secure ZIP intake for your tax materials
+                Bezpečný příjem ZIP souboru pro vaše daňové podklady
               </div>
             </div>
             <div className="d-flex gap-2">
-              <span className="badge text-bg-primary">ZIP only</span>
+              <span className="badge text-bg-primary">Pouze ZIP</span>
               <span className="badge text-bg-secondary">FastAPI</span>
             </div>
           </div>
           <div className="card-body p-4 p-md-5">
             <p className="text-muted mb-4">
-              Upload a ZIP archive that contains your tax documents. We will
-              extract and calculate your tax result.
+              Nahrajte ZIP archiv, který obsahuje vaše daňové dokumenty.
+              Zpracujeme je a spočítáme váš daňový výsledek.
             </p>
 
             <form onSubmit={handleSubmit} className="d-grid gap-3">
@@ -145,7 +154,7 @@ export default function Page() {
                   }
                 />
                 <div className="small text-muted mt-2">
-                  Drag and drop your ZIP file here or click to browse.
+                  Přetáhněte ZIP soubor sem nebo klikněte pro výběr.
                 </div>
               </div>
 
@@ -154,7 +163,7 @@ export default function Page() {
                 className="btn btn-primary btn-lg"
                 disabled={status.type === "loading"}
               >
-                {status.type === "loading" ? "Uploading..." : "Submit"}
+                {status.type === "loading" ? "Nahrávám..." : "Odeslat"}
               </button>
             </form>
 
