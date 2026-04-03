@@ -4,7 +4,7 @@ from backend.models.confirmation_of_a_taxable_income import ConfirmationOfATaxab
 from backend.models.tax_result import TaxResult
 
 # 2026 annual threshold: 36× average monthly wage (48,967 CZK × 36 = 1,762,812)
-_BRACKET_THRESHOLD = Decimal("1762812")
+_BRACKET_THRESHOLD = Decimal("1676052")
 _RATE_LOW = Decimal("0.15")
 _RATE_HIGH = Decimal("0.23")
 _SLEVA_NA_POPLATNIKA = Decimal("30840")

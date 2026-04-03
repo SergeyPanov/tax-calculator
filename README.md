@@ -78,6 +78,29 @@ A negative `overpayment_or_underpayment` means a refund (přeplatek) — `tax_af
 | Potvrzení o zdanitelných příjmech | Certificate of taxable incomes | MFin 5460 |
 | DAP — Daňové přiznání | Tax return form | Přiznání k dani z příjmů FO |
 
+
+## CORS Configuration
+
+Backend CORS behavior is controlled by environment variables:
+
+- `APP_ENV` — environment mode (`development` / `local` => permissive CORS for local work)
+- `CORS_ALLOW_ALL` — if `true`, backend allows all origins (`*`) and disables credentials to keep CORS valid
+- `CORS_ALLOWED_ORIGINS` — comma-separated allowlist used in non-dev mode (for example: `https://app.example.cz,https://admin.example.cz`)
+
+Default behavior is secure: if no variables are set, backend runs in non-dev mode with an explicit allowlist requirement.
+
+### Local Docker verification
+
+```bash
+# Start both services with local dev CORS env from docker-compose.yml
+docker compose up --build
+
+# Verify CORS preflight from frontend origin
+curl -i -X OPTIONS http://localhost:8000/calculate-tax   -H "Origin: http://localhost:3000"   -H "Access-Control-Request-Method: POST"
+```
+
+Expected in local dev: `access-control-allow-origin: *` in the response headers.
+
 ## Prerequisites
 
 - [Nix](https://nixos.org/download/) package manager
