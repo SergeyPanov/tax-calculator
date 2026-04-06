@@ -4,6 +4,7 @@ from typing import Any
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from backend.config import load_dotenv_file
 from backend.routers.pdf import router as pdf_router
 
 
@@ -44,6 +45,7 @@ def _cors_settings() -> dict[str, Any]:
 
 
 def create_app() -> FastAPI:
+    load_dotenv_file()
     app = FastAPI()
     app.add_middleware(CORSMiddleware, **_cors_settings())
     app.include_router(pdf_router)
