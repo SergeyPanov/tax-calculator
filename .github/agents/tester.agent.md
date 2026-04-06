@@ -32,7 +32,7 @@ Run ALL of these for every change:
 Verify these exact values when testing tax logic:
 
 - Income 1,000,000 CZK → 15% = 150,000 CZK tax
-- Income 2,000,000 CZK → 15% × 1,762,812 + 23% × 237,188 = 318,875 CZK tax
+- Income 2,000,000 CZK → 15% × 1,762,812 + 23% × 237,188 = 318,975 CZK tax
 - Social insurance minimum: 5,720 CZK/month
 - Health insurance minimum: 3,306 CZK/month
 - All monetary values must use `Decimal`, never `float`

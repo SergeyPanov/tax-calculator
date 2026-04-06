@@ -30,7 +30,7 @@ async def calculate_tax(
     Accepts a .zip file containing one or more Potvrzeni o zdanitelnych prijmech (MFin 5460)
     PDF files. Each PDF is extracted and parsed; results are aggregated and tax is calculated:
     - Tax base rounded down to nearest 100 CZK (DAP r. 56)
-    - Progressive income tax: 15% on first CZK 1,762,812, 23% above (DAP r. 57)
+    - Progressive income tax: 15% up to ANNUAL_THRESHOLD_CZK, 23% above (DAP r. 57)
     - Sleva na poplatnika (CZK 30,840) applied automatically (DAP r. 70)
     - Tax after credits (DAP r. 71)
     - Overpayment/underpayment vs. withheld advances (DAP r. 84)

@@ -40,4 +40,5 @@ jobs:
       - name: Run tests
         env:
           PYTHONPATH: ${{ github.workspace }}
+          ANNUAL_THRESHOLD_CZK: "1676052"
         run: .venv/bin/pytest backend/tests/ -v

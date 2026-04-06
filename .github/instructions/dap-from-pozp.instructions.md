@@ -50,12 +50,12 @@ DAP ř. 45 = total tax base (sum of all partial bases).
 
 ### Rule 4 — DAP ř. 57: Income tax (DPFO, § 16)
 ```
-If DAP ř. 56 ≤ 1 762 812:
+If DAP ř. 56 ≤ 1 676 052:
     DAP ř. 57 = FLOOR(DAP ř. 56 × 0.15)
 
-If DAP ř. 56 > 1 762 812:
-    DAP ř. 57 = FLOOR(1 762 812 × 0.15)
-              + FLOOR((DAP ř. 56 − 1 762 812) × 0.23)
+If DAP ř. 56 > 1 676 052:
+    DAP ř. 57 = FLOOR(1 676 052 × 0.15)
+              + FLOOR((DAP ř. 56 − 1 676 052) × 0.23)
 ```
 All amounts rounded down (`ROUND_FLOOR`) to whole CZK.
 
@@ -123,4 +123,4 @@ Before finalising DAP, verify:
 - Czech law: Zákon č. 586/1992 Sb. o daních z příjmů
 - Relevant sections: § 5 (základ daně), § 6 (závislá činnost), § 16 (sazba daně), § 35ba (slevy)
 - Form: MFin 5460 — Potvrzení o zdanitelných příjmech ze závislé činnosti
-- 2026 threshold (36 × průměrná mzda): **CZK 1 762 812**
+- 2025 threshold (36 × průměrná mzda): **CZK 1 676 052**
