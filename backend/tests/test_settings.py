@@ -1,10 +1,22 @@
 from decimal import Decimal
 from pathlib import Path
+from typing import Protocol, cast
 
 import pytest
 
 from backend.config import get_tax_annual_threshold_czk
 from backend.config import settings as settings_module
+
+
+class _SupportsCacheClear(Protocol):
+    def __call__(self) -> None: ...
+
+    def cache_clear(self) -> None: ...
+
+
+def _reset_dotenv_loader_state() -> None:
+    loader = cast(_SupportsCacheClear, settings_module._load_dotenv_file)
+    loader.cache_clear()
 
 
 def _legacy_threshold_env_key() -> str:
@@ -23,13 +35,13 @@ def test_threshold_raises_when_env_and_dotenv_missing(
     _clear_threshold_env(monkeypatch)
     dotenv_path = tmp_path / ".env"
     monkeypatch.setattr(settings_module, "_DOTENV_PATH", dotenv_path)
-    settings_module._load_dotenv_file.cache_clear()
+    _reset_dotenv_loader_state()
 
     try:
         with pytest.raises(ValueError, match="Missing required ANNUAL_THRESHOLD_CZK"):
             get_tax_annual_threshold_czk()
     finally:
-        settings_module._load_dotenv_file.cache_clear()
+        _reset_dotenv_loader_state()
 
 
 def test_threshold_uses_annual_threshold_env_value(
@@ -61,12 +73,12 @@ def test_loads_threshold_from_dotenv_file_when_env_unset(
     dotenv_path = tmp_path / ".env"
     dotenv_path.write_text("ANNUAL_THRESHOLD_CZK=1999999\n", encoding="utf-8")
     monkeypatch.setattr(settings_module, "_DOTENV_PATH", dotenv_path)
-    settings_module._load_dotenv_file.cache_clear()
+    _reset_dotenv_loader_state()
 
     try:
         assert get_tax_annual_threshold_czk() == Decimal("1999999")
     finally:
-        settings_module._load_dotenv_file.cache_clear()
+        _reset_dotenv_loader_state()
 
 
 def test_dotenv_parser_handles_comments_export_and_invalid_lines(
@@ -78,18 +90,18 @@ def test_dotenv_parser_handles_comments_export_and_invalid_lines(
     dotenv_path.write_text(
         "\n"
         "# a comment line should be ignored\n"
-        "export ANNUAL_THRESHOLD_CZK=1762812\n"
+        "export ANNUAL_THRESHOLD_CZK=1676052\n"
         "MALFORMED_WITHOUT_EQUALS\n"
         " =value_without_key\n",
         encoding="utf-8",
     )
     monkeypatch.setattr(settings_module, "_DOTENV_PATH", dotenv_path)
-    settings_module._load_dotenv_file.cache_clear()
+    _reset_dotenv_loader_state()
 
     try:
-        assert get_tax_annual_threshold_czk() == Decimal("1762812")
+        assert get_tax_annual_threshold_czk() == Decimal("1676052")
     finally:
-        settings_module._load_dotenv_file.cache_clear()
+        _reset_dotenv_loader_state()
 
 
 def test_legacy_threshold_env_is_not_used_as_source(
@@ -101,10 +113,10 @@ def test_legacy_threshold_env_is_not_used_as_source(
 
     dotenv_path = tmp_path / ".env"
     monkeypatch.setattr(settings_module, "_DOTENV_PATH", dotenv_path)
-    settings_module._load_dotenv_file.cache_clear()
+    _reset_dotenv_loader_state()
 
     try:
         with pytest.raises(ValueError, match="Missing required ANNUAL_THRESHOLD_CZK"):
             get_tax_annual_threshold_czk()
     finally:
-        settings_module._load_dotenv_file.cache_clear()
+        _reset_dotenv_loader_state()

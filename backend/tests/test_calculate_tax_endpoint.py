@@ -15,6 +15,11 @@ def client() -> TestClient:
     return TestClient(app)
 
 
+@pytest.fixture(autouse=True)
+def _set_tax_threshold_env(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("ANNUAL_THRESHOLD_CZK", "1676052")
+
+
 def _mock_confirmation(**kwargs: Decimal | None) -> ConfirmationOfATaxableIncome:
     tax_base = kwargs.get("tax_base", Decimal("1000000"))
     additional_payments = kwargs.get("additional_payments", Decimal("0"))

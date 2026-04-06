@@ -73,11 +73,11 @@ class TestTaxCalculationService:
         # overpayment: 295,075 − 300,000 = -4,925
         assert result.overpayment_or_underpayment == Decimal("-4925.00")
 
-    def test_2026_threshold_for_2000000_income_is_318975(
+    def test_threshold_1676052_for_2000000_income_is_325915(
         self, monkeypatch: pytest.MonkeyPatch
     ) -> None:
-        """With 2026 threshold, 2,000,000 CZK tax floors to 318,975 CZK."""
-        monkeypatch.setenv("ANNUAL_THRESHOLD_CZK", "1762812")
+        """With threshold 1,676,052, 2,000,000 CZK tax floors to 325,915 CZK."""
+        monkeypatch.setenv("ANNUAL_THRESHOLD_CZK", "1676052")
         c = _make_confirmation(
             tax_base=Decimal("2000000"),
             total_tax_advance=Decimal("0"),
@@ -85,10 +85,10 @@ class TestTaxCalculationService:
 
         result = self.service.calculate([c])
 
-        assert result.tax_at_15_pct == Decimal("264421.80")
-        assert result.tax_at_23_pct == Decimal("54553.24")
-        assert result.tax_at_15_pct + result.tax_at_23_pct == Decimal("318975.04")
-        assert result.income_tax == Decimal("318975")
+        assert result.tax_at_15_pct == Decimal("251407.80")
+        assert result.tax_at_23_pct == Decimal("74508.04")
+        assert result.tax_at_15_pct + result.tax_at_23_pct == Decimal("325915.84")
+        assert result.income_tax == Decimal("325915")
 
     @pytest.mark.parametrize(
         ("income", "expected_tax_15", "expected_tax_23", "expected_tax"),
