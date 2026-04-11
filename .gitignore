@@ -16,7 +16,6 @@ build/
 *.pdf
 *.zip
 node_modules/
-package.json
 .coverage
 .DS_Store
 .next
