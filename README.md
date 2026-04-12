@@ -112,7 +112,8 @@ curl -i -X OPTIONS http://localhost:8000/calculate-tax   -H "Origin: http://loca
 
 Expected in local dev: `access-control-allow-origin: *` in the response headers.
 
-With `docker-compose.yml`, backend loads `.env` through `env_file`, so `ANNUAL_THRESHOLD_CZK` must be present in the repository `.env` (or provided by shell environment with higher precedence).
+With `docker-compose.yml`, backend loads `.env` through `env_file`, and Compose now also enforces `ANNUAL_THRESHOLD_CZK` via required interpolation for the backend service.
+If the variable is missing, `docker compose up` fails immediately with a clear error before container startup.
 
 ## Prerequisites
 

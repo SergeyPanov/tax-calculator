@@ -53,11 +53,15 @@ jobs:
             context: .
             dockerfile: backend/Dockerfile
             dockerhub-project-name: tax-calculator
+            build_args: ""
 
           - service: frontend
             context: ./frontend
             dockerfile: ./frontend/Dockerfile
             dockerhub-project-name: tax-calculator-frontend
+            build_args: |
+              NEXT_PUBLIC_BACKEND_URL=${{ vars.NEXT_PUBLIC_BACKEND_URL }}
+
     steps:
       - name: Checkout source code
         uses: actions/checkout@v6

@@ -34,3 +34,9 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+## Runtime Environment
+
+- `NEXT_PUBLIC_BACKEND_URL` (required): Base URL for the backend FastAPI service used directly by the browser client (`${NEXT_PUBLIC_BACKEND_URL}/calculate-tax`). Set it as a full URL without a trailing slash (for example `http://backend:8000` or `https://api.example.com`). No fallback is used by the app; if unset or empty, uploads are blocked and a configuration error is shown.
+- `NEXT_PUBLIC_*` variables are embedded at build time by Next.js. When running in containers, pass `NEXT_PUBLIC_BACKEND_URL` into the frontend build (for example via Docker build args) and rebuild the image whenever the value changes.
+
