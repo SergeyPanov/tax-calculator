@@ -108,6 +108,7 @@ jobs:
           context: ${{ matrix.context }}
           file: ${{ matrix.dockerfile }}
           push: true
+          build-args: ${{ matrix.build_args }}
           platforms: linux/arm64
           tags: |
             ${{ secrets.DOCKER_USERNAME }}/${{ matrix.dockerhub-project-name }}:latest
