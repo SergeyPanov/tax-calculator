@@ -11,14 +11,20 @@ type Status =
 
 export default function Page() {
   const router = useRouter();
-  const backendUrl =
-    process.env.NEXT_PUBLIC_BACKEND_URL ?? "http://localhost:8000";
-  const calculateTaxUrl = `${backendUrl}/calculate-tax`;
+  const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL?.trim() ?? "";
+  const hasBackendUrl = backendUrl.length > 0;
+  const calculateTaxUrl = hasBackendUrl
+    ? `${backendUrl.endsWith("/") ? backendUrl.slice(0, -1) : backendUrl}/calculate-tax`
+    : "";
+  const backendConfigError =
+    "Chybná konfigurace: nastavte NEXT_PUBLIC_BACKEND_URL pro přímé volání backendu.";
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [status, setStatus] = useState<Status>({
-    type: "idle",
-    message: "Vyberte ZIP archiv s vašimi daňovými dokumenty.",
+    type: hasBackendUrl ? "idle" : "error",
+    message: hasBackendUrl
+      ? "Vyberte ZIP archiv s vašimi daňovými dokumenty."
+      : backendConfigError,
   });
 
   const statusClass = useMemo(() => {
@@ -36,6 +42,14 @@ export default function Page() {
 
   const handleFileChange = (file: File | null) => {
     setSelectedFile(file);
+    if (!hasBackendUrl) {
+      setStatus({
+        type: "error",
+        message: backendConfigError,
+      });
+      return;
+    }
+
     if (file) {
       setStatus({
         type: "idle",
@@ -58,6 +72,14 @@ export default function Page() {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (!hasBackendUrl) {
+      setStatus({
+        type: "error",
+        message: backendConfigError,
+      });
+      return;
+    }
+
     if (!selectedFile) {
       setStatus({
         type: "error",
@@ -161,7 +183,7 @@ export default function Page() {
               <button
                 type="submit"
                 className="btn btn-primary btn-lg"
-                disabled={status.type === "loading"}
+                disabled={status.type === "loading" || !hasBackendUrl}
               >
                 {status.type === "loading" ? "Nahrávám..." : "Odeslat"}
               </button>
