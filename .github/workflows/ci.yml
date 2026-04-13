@@ -5,6 +5,8 @@ on:
     branches:
       - main
   pull_request:
+    branches:
+      - main
 
 jobs:
   tests:
@@ -46,6 +48,7 @@ jobs:
   build-containers:
     runs-on: ubuntu-latest
     needs: tests
+    if: ${{ github.ref == 'refs/heads/main' && github.event_name == 'push' }}
     strategy:
       matrix:
         include:
@@ -107,7 +110,7 @@ jobs:
         with:
           context: ${{ matrix.context }}
           file: ${{ matrix.dockerfile }}
-          push: ${{ github.ref == 'refs/heads/main' && github.event_name == 'push' }}
+          push: true
           build-args: ${{ matrix.build_args }}
           platforms: linux/arm64
           tags: |
