@@ -1,0 +1,24 @@
+name: Deploy
+on:
+  pull_request:
+    branches:
+      - main
+concurrency:
+  group: deployment
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          username: ${{ vars.SSH_USER }}
+          script: |
+            docker pull ${{ secrets.DOCKER_USERNAME }}/tax-calculator:latest
+            docker stop tax-calculator
+            docker run -d -e ANNUAL_THRESHOLD_CZK=${{ vars.ANNUAL_THRESHOLD_CZK }} -p 8000:8000 --name tax-calculator ${{ secrets.DOCKER_USERNAME }}/tax-calculator:latest
