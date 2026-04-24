@@ -1,0 +1,51 @@
+services:
+  nginx:
+    image: nginx:1.29.8-alpine
+    ports:
+      - "80:80"
+    volumes:
+      - ./ops/nginx/local/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - tax-calculator
+    restart: unless-stopped
+    networks:
+      - web
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  tax-calculator:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    expose:
+      - 8000
+    deploy:
+      replicas: 3
+    restart: unless-stopped
+    environment:
+      ANNUAL_THRESHOLD_CZK: 1676052
+      APP_ENV: development
+      CORS_ALLOW_ALL: "true"
+    networks:
+      - web
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_BACKEND_URL: http://localhost:80/api
+    restart: unless-stopped
+    expose:
+      - 3000
+    depends_on:
+      - tax-calculator
+    networks:
+      - web
+
+networks:
+  web:
+    driver: bridge
