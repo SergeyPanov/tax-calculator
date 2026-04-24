@@ -3,7 +3,7 @@ on:
   workflow_call: {}
 concurrency:
   group: build-containers
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   build-containers:

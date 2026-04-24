@@ -1,0 +1,32 @@
+name: Deploy
+concurrency:
+  group: deployment
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Copy docker compose and nginx configs to prod
+        uses: appleboy/scp-action@v1
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          username: ${{ vars.SSH_USER }}
+          source: "docker-compose.prod.yml,ops/nginx/prod/nginx.conf"
+          target: "~/tax-calculator"
+
+      - name: Deploy on OCI
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          username: ${{ vars.SSH_USER }}
+          script: |
+            cd ~/tax-calculator
+            docker compose -f docker-compose.prod.yml pull
+            docker compose -f docker-compose.prod.yml up -d
