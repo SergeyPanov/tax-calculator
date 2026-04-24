@@ -27,8 +27,8 @@ services:
       ANNUAL_THRESHOLD_CZK: 1676052
       APP_ENV: production
       CORS_ALLOWED_ORIGINS: "*"
-  networks:
-    - web
+    networks:
+      - web
 
 networks:
   web:
