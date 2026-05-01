@@ -10,7 +10,8 @@ services:
       - "443:443"
     volumes:
       - ./ops/nginx/prod/nginx.conf:/etc/nginx/nginx.conf:ro
-      - ./certs:/etc/local/live/cz-tax-api.duckdns.org:ro
+      - ./lets-encrypt-certs/live/cz-tax-api.duckdns.org:/etc/lets-encrypt/live/cz-tax-api.duckdns.org:ro
+      - ./lets-encrypt-certs/archive/cz-tax-api.duckdns.org:/etc/lets-encrypt/archive/cz-tax-api.duckdns.org:ro
     depends_on:
       - tax-calculator
     restart: unless-stopped
