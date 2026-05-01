@@ -1,6 +1,11 @@
 services:
   nginx:
     image: nginx:1.29.8-alpine
+    deploy:
+      resources:
+        limits:
+          memory: 64M
+          cpus: "0.25"
     ports:
       - "80:80"
     volumes:
@@ -21,7 +26,13 @@ services:
     expose:
       - 8000
     deploy:
-      replicas: 3
+      resources:
+        limits:
+          memory: 200M
+          cpus: "0.35"
+        reservations:
+          memory: 100M
+      replicas: 2
     restart: unless-stopped
     environment:
       ANNUAL_THRESHOLD_CZK: 1676052
