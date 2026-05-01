@@ -5,7 +5,6 @@ services:
       resources:
         limits:
           memory: 64M
-          cpus: "0.25"
     ports:
       - "80:80"
     volumes:
@@ -29,7 +28,6 @@ services:
       resources:
         limits:
           memory: 200M
-          cpus: "0.35"
         reservations:
           memory: 100M
       replicas: 2
