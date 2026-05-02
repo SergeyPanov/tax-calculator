@@ -56,12 +56,12 @@ variable "instance_memory_in_gbs" {
 }
 
 # Set this variable to pin the instance image and prevent unintended replacement
-# on future plans. Leave empty to auto-resolve the latest Oracle Linux 8 ARM image.
+# on future plans. Leave empty to auto-resolve the latest Canonical Ubuntu 22.04 ARM image.
 # After first apply, run: terraform output instance_image_id
 # and set this variable to that value.
 variable "instance_image_id" {
   type        = string
-  description = "OCID of the compute image. Leave empty to use the latest Oracle Linux 8 image compatible with the chosen shape."
+  description = "OCID of the compute image. Leave empty to use the latest Canonical Ubuntu 22.04 image compatible with the chosen shape."
   default     = ""
 }
 

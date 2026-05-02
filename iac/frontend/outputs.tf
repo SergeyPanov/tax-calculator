@@ -25,5 +25,5 @@ output "vcn_id" {
 
 output "ssh_command" {
   description = "Example SSH command to connect to the instance"
-  value       = "ssh opc@${oci_core_instance.frontend.public_ip}"
+  value       = "ssh ubuntu@${oci_core_instance.frontend.public_ip}"
 }

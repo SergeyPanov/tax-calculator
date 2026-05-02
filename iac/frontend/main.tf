@@ -34,10 +34,10 @@ locals {
 # This data source is only used when instance_image_id variable is not set.
 # After first apply, pin the image to prevent unexpected instance replacement:
 #   terraform output instance_image_id  → set instance_image_id variable to that value.
-data "oci_core_images" "oracle_linux_8" {
+data "oci_core_images" "ubuntu" {
   compartment_id           = var.compartment_ocid
-  operating_system         = "Oracle Linux"
-  operating_system_version = "8"
+  operating_system         = "Canonical Ubuntu"
+  operating_system_version = "22.04"
   shape                    = var.instance_shape
   sort_by                  = "TIMECREATED"
   sort_order               = "DESC"
@@ -45,7 +45,7 @@ data "oci_core_images" "oracle_linux_8" {
 }
 
 locals {
-  resolved_image_id = var.instance_image_id != "" ? var.instance_image_id : data.oci_core_images.oracle_linux_8.images[0].id
+  resolved_image_id = var.instance_image_id != "" ? var.instance_image_id : data.oci_core_images.ubuntu.images[0].id
 }
 
 # ---------------------------------------------------------------------------
@@ -171,13 +171,14 @@ locals {
     set -euo pipefail
 
     # Install and start nginx
-    dnf install -y nginx
+    apt-get update -y
+    apt-get install -y nginx
     systemctl enable --now nginx
 
-    # Open ports 80 and 443 in firewalld (OCI Oracle Linux has it enabled by default)
-    firewall-cmd --permanent --add-service=http
-    firewall-cmd --permanent --add-service=https
-    firewall-cmd --reload
+    # Open ports 80 and 443 in ufw (Ubuntu default firewall)
+    ufw allow 80/tcp
+    ufw allow 443/tcp
+    ufw --force enable
   EOT
 }
 
