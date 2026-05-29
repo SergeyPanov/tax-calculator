@@ -19,3 +19,12 @@ node_modules/
 .coverage
 .DS_Store
 .next
+
+# Terraform
+**/.terraform/
+*.tfstate
+*.tfstate.backup
+*.tfstate.lock.info
+terraform.tfvars
+*.tfvars.json
+.terraform.lock.hcl

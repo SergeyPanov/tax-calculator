@@ -1,0 +1,30 @@
+# Copy this file to terraform.tfvars and fill in your OCI credentials.
+# Never commit terraform.tfvars to source control — it contains secrets.
+
+# --- OCI Authentication ---
+tenancy_ocid     = "ocid1.tenancy.oc1..aaaa..."
+user_ocid        = "ocid1.user.oc1..aaaa..."
+fingerprint      = "aa:bb:cc:dd:ee:ff:00:11:22:33:44:55:66:77:88:99"
+private_key_path = "~/.oci/oci_api_key.pem"
+region           = "eu-frankfurt-1"
+
+# --- Compartment ---
+compartment_ocid = "ocid1.compartment.oc1..aaaa..."
+
+# --- SSH Access ---
+ssh_authorized_keys = "ssh-rsa AAAA... user@host"
+
+# --- Compute (optional overrides) ---
+# availability_domain_number = 1   # Try 2 or 3 if A1.Flex capacity is unavailable
+# instance_shape             = "VM.Standard.A1.Flex"
+# instance_ocpus             = 1
+# instance_memory_in_gbs     = 6
+
+# --- Image pinning (recommended after first apply) ---
+# Run: terraform output instance_image_id
+# Then uncomment and set the value below to prevent unexpected instance replacement:
+# instance_image_id = "ocid1.image.oc1.eu-frankfurt-1.aaaa..."
+
+# --- Networking (optional overrides) ---
+# vcn_cidr    = "10.0.0.0/16"
+# subnet_cidr = "10.0.1.0/24"
