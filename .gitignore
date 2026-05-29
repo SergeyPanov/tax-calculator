@@ -28,3 +28,6 @@ node_modules/
 terraform.tfvars
 *.tfvars.json
 .terraform.lock.hcl
+
+# Opencode
+.opencode
