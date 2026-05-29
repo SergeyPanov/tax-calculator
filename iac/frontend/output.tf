@@ -39,5 +39,5 @@ output "private-security-list-OCID" {
 
 
 output "ubuntu-images" {
-  value = module.compute.debug_ubuntu_images
+  value = module.compute.instance-shape
 }
