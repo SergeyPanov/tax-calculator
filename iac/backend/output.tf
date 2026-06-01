@@ -13,11 +13,3 @@ output "instance-shape" {
 output "instance-state" {
   value = module.compute.instance-state
 }
-
-output "instance-OCPUs" {
-  value = module.compute.instance-OCPUs
-}
-
-output "instance-memory-in-GBs" {
-  value = module.compute.instance-memory-in-GBs
-}

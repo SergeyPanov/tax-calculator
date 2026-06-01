@@ -20,6 +20,6 @@ resource "oci_core_instance" "ubuntu_instance" {
   }
 
   # Optional
-  display_name         = "tax-calculator-frontend"
+  display_name         = var.instance_name
   preserve_boot_volume = false
 }

@@ -1,7 +1,7 @@
 resource "oci_core_security_list" "public-security-list" {
   compartment_id = var.compartment_ocid
   vcn_id         = module.vcn.vcn_id
-  display_name   = "tax-calculator-public-security-list"
+  display_name   = "${var.vcn_name}-public-security-list"
 
   # Allow inbound SSH
   ingress_security_rules {

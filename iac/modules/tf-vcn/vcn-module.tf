@@ -1,7 +1,6 @@
 module "vcn" {
   source  = "oracle-terraform-modules/vcn/oci"
   version = "3.6.0"
-  # insert the 1 required variable here
 
   # Required Inputs
   compartment_id = var.compartment_ocid
@@ -9,9 +8,8 @@ module "vcn" {
   # Optional Inputs
   region = var.region
 
-  # Changing the following default values
-  vcn_name                = "tax-calculator-vcn"
+  vcn_name                = var.vcn_name
   create_internet_gateway = true
-  create_nat_gateway      = true
-  create_service_gateway  = true
+  create_nat_gateway      = false
+  create_service_gateway  = false
 }

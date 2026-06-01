@@ -10,6 +10,12 @@ variable "subnet_id" {
 }
 
 variable "ssh_pub_key" {
-  type    = string
-  default = "The SSH public key to connect to the compute instance"
+  type        = string
+  description = "Path to the SSH public key file to connect to the compute instance"
+}
+
+variable "instance_name" {
+  type        = string
+  description = "Display name for the compute instance"
+  default     = "tax-calculator"
 }

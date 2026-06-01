@@ -21,5 +21,5 @@ module "compute" {
   compartment_ocid = data.terraform_remote_state.network.outputs.compartment_id
   subnet_id        = data.terraform_remote_state.network.outputs.public_subnet_id
   ssh_pub_key      = var.ssh_pub_key
-  instance_name    = "tax-calculator-frontend"
+  instance_name    = "tax-calculator-backend"
 }
